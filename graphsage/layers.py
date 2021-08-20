@@ -17,6 +17,11 @@ class GraphSAGELayer(torch.nn.Module):
             - sz_out: dimension of output
             - agg: "max" or "mean" aggregator to be used between 
             - edge_index: [2, num_edges] list [(u, v)] for edge from u to v
+            - dropout: probability of dropping an edge. uses the edge dropout method
+            - depth: number K of iterations the model does over the data points
+            - concat: boolean the neightborhood features are concatenated with the past features if set to true, else they are added
+            - dim_i: intermediate dimension in between input and output. set to 1024 as per the original paper
+            - normalize: boolean whether to normalize the node features or not
         """
         super().__init__()
         
@@ -32,7 +37,8 @@ class GraphSAGELayer(torch.nn.Module):
         self.agg = agg
         self.dropout = dropout
 
-        if agg == "max":
+        if agg == "max": 
+            ## for the max aggregator we are using a learnable aggregator
             self.agg_model = nn.ModuleList([nn.Linear(sz_in,sz_in, bias=True)] + (depth-1) * [nn.Linear(dim_i,dim_i, bias=True)])
 
         self.normalize = normalize
@@ -48,6 +54,7 @@ class GraphSAGELayer(torch.nn.Module):
         """
         N = x.size(0)
         if not self.training:
+            ## we drop edges and insert back the self loops in case they are dropped so that every node has at least one neighbor 
             edge_index = add_remaining_self_loops(dropout_adj(edge_index, p=self.dropout, force_undirected=True)[0], num_nodes=N)[0]
         u, v = edge_index
 
@@ -60,7 +67,5 @@ class GraphSAGELayer(torch.nn.Module):
             h_cat = torch.cat([h,hn],dim=1) if self.concat else h+hn
             h = self.sigma(self.linear[k](h_cat))
             if self.normalize: h = h/h.norm(dim=1).unsqueeze(-1)
-
-        #assert False, "breakpoint"
 
         return h
