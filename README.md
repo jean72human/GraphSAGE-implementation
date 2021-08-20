@@ -1,6 +1,6 @@
-# GraphSAGE-implementation
+# GraphSAGE implementation
 
-Implementation of [Inductive Representation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) 
+Implementation of [Inductive Representation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) as part of the AIMS AMMI program
 
 Install the requirements
 ```
