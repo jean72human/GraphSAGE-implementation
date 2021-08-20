@@ -1,6 +1,6 @@
 # GraphSAGE-implementation
 
-Implementation of [Inductive Represnetation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) 
+Implementation of [Inductive Representation Learning on Large Graphs](https://cs.stanford.edu/people/jure/pubs/graphsage-nips17.pdf) 
 
 Install the requirements
 ```
